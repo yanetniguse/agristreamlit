@@ -10,6 +10,15 @@ NourishKidsAgri is an AI-driven platform designed to assist farmers in making in
 
 ---
 
+## Live Demo 🌟
+
+Check out the live demo of NourishKidsAgri on Streamlit:  
+[**Live Demo: NourishKidsAgri**](https://nourishkidsagri.streamlit.app/)
+
+Explore the features and see how the platform can help optimize your farming practices with AI-powered recommendations.
+
+---
+
 ## How It Works:
 
 ### Crop Recommendation System 🌾:
