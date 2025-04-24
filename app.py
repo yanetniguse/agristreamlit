@@ -242,3 +242,20 @@ with tabs[4]:
         else:
             st.warning("Please enter a question.")
 
+st.markdown("""
+<style>
+.footer {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: gray;
+    font-size: 14px;
+    padding: 10px;
+}
+</style>
+<div class="footer">
+    © 2024 Yanet Niguse Tesfay. All rights reserved.
+</div>
+""", unsafe_allow_html=True)
