@@ -2,14 +2,28 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
-def get_irrigation_recommendation(soil_input, temp_input, hum_input, crop_type="maize"):
+# Category map for flexible classification
+CROP_CATEGORIES = {
+    "maize": "grains",
+    "wheat": "grains",
+    "tomato": "vegetables",
+    "spinach": "vegetables",
+    "potato": "roots",
+    "cassava": "roots",
+    "banana": "fruits",
+    "mango": "fruits"
+}
+
+def get_irrigation_recommendation(soil_input, temp_input, hum_input, crop_type="general"):
+    crop_category = CROP_CATEGORIES.get(crop_type.lower(), "general")
+
     # Define fuzzy variables
     soil_moisture = ctrl.Antecedent(np.arange(0, 101, 1), 'soil_moisture')
     temperature = ctrl.Antecedent(np.arange(0, 51, 1), 'temperature')
     humidity = ctrl.Antecedent(np.arange(0, 101, 1), 'humidity')
     sprinkling = ctrl.Consequent(np.arange(0, 101, 1), 'sprinkling')
 
-    # Standard membership functions for temperature & sprinkling
+    # Temperature and sprinkling (same for all)
     temperature['cold'] = fuzz.trimf(temperature.universe, [0, 10, 20])
     temperature['warm'] = fuzz.trimf(temperature.universe, [15, 25, 35])
     temperature['hot'] = fuzz.trimf(temperature.universe, [30, 40, 50])
@@ -18,52 +32,41 @@ def get_irrigation_recommendation(soil_input, temp_input, hum_input, crop_type="
     sprinkling['medium'] = fuzz.trimf(sprinkling.universe, [30, 50, 70])
     sprinkling['high'] = fuzz.trimf(sprinkling.universe, [60, 80, 100])
 
-    # Standard/default for maize (and fallback)
-    if crop_type.lower() in ["maize", "default"]:
-        soil_moisture['low'] = fuzz.trimf(soil_moisture.universe, [0, 25, 50])
-        soil_moisture['medium'] = fuzz.trimf(soil_moisture.universe, [30, 50, 70])
-        soil_moisture['high'] = fuzz.trimf(soil_moisture.universe, [60, 80, 100])
+    # Category-specific membership functions
+    if crop_category == "grains":
+        soil_moisture.automf(names=['low', 'medium', 'high'])
+        humidity.automf(names=['low', 'medium', 'high'])
 
-        humidity['low'] = fuzz.trimf(humidity.universe, [0, 25, 50])
-        humidity['medium'] = fuzz.trimf(humidity.universe, [30, 50, 70])
-        humidity['high'] = fuzz.trimf(humidity.universe, [60, 80, 100])
-
-    elif crop_type.lower() == "tomato":
+    elif crop_category == "vegetables":
         soil_moisture['low'] = fuzz.trimf(soil_moisture.universe, [0, 15, 35])
         soil_moisture['medium'] = fuzz.trimf(soil_moisture.universe, [30, 50, 70])
-        soil_moisture['high'] = fuzz.trimf(soil_moisture.universe, [60, 80, 100])
+        soil_moisture['high'] = fuzz.trimf(soil_moisture.universe, [60, 85, 100])
 
         humidity['low'] = fuzz.trimf(humidity.universe, [0, 20, 40])
         humidity['medium'] = fuzz.trimf(humidity.universe, [35, 55, 75])
-        humidity['high'] = fuzz.trimf(humidity.universe, [70, 85, 100])
+        humidity['high'] = fuzz.trimf(humidity.universe, [70, 90, 100])
 
-    elif crop_type.lower() == "wheat":
+    elif crop_category == "roots":
         soil_moisture['low'] = fuzz.trimf(soil_moisture.universe, [0, 20, 40])
         soil_moisture['medium'] = fuzz.trimf(soil_moisture.universe, [35, 55, 75])
         soil_moisture['high'] = fuzz.trimf(soil_moisture.universe, [70, 90, 100])
 
         humidity['low'] = fuzz.trimf(humidity.universe, [0, 25, 50])
-        humidity['medium'] = fuzz.trimf(humidity.universe, [30, 50, 70])
-        humidity['high'] = fuzz.trimf(humidity.universe, [60, 80, 100])
-
-    elif crop_type.lower() == "potato":
-        soil_moisture['low'] = fuzz.trimf(soil_moisture.universe, [0, 25, 50])
-        soil_moisture['medium'] = fuzz.trimf(soil_moisture.universe, [30, 50, 70])
-        soil_moisture['high'] = fuzz.trimf(soil_moisture.universe, [60, 80, 100])
-
-        humidity['low'] = fuzz.trimf(humidity.universe, [0, 25, 50])
         humidity['medium'] = fuzz.trimf(humidity.universe, [45, 60, 75])
         humidity['high'] = fuzz.trimf(humidity.universe, [70, 85, 100])
 
-    else:
-        # fallback: same as maize
-        soil_moisture['low'] = fuzz.trimf(soil_moisture.universe, [0, 25, 50])
-        soil_moisture['medium'] = fuzz.trimf(soil_moisture.universe, [30, 50, 70])
-        soil_moisture['high'] = fuzz.trimf(soil_moisture.universe, [60, 80, 100])
+    elif crop_category == "fruits":
+        soil_moisture['low'] = fuzz.trimf(soil_moisture.universe, [0, 20, 45])
+        soil_moisture['medium'] = fuzz.trimf(soil_moisture.universe, [40, 60, 80])
+        soil_moisture['high'] = fuzz.trimf(soil_moisture.universe, [75, 90, 100])
 
-        humidity['low'] = fuzz.trimf(humidity.universe, [0, 25, 50])
-        humidity['medium'] = fuzz.trimf(humidity.universe, [30, 50, 70])
-        humidity['high'] = fuzz.trimf(humidity.universe, [60, 80, 100])
+        humidity['low'] = fuzz.trimf(humidity.universe, [0, 30, 50])
+        humidity['medium'] = fuzz.trimf(humidity.universe, [45, 65, 85])
+        humidity['high'] = fuzz.trimf(humidity.universe, [80, 90, 100])
+
+    else:  # general/default
+        soil_moisture.automf(names=['low', 'medium', 'high'])
+        humidity.automf(names=['low', 'medium', 'high'])
 
     # Define fuzzy rules
     rules = [
