@@ -215,6 +215,16 @@ with tabs[3]:
 # FAQ Tab
 with tabs[4]:
     st.subheader("🤖 Ask the FAQ Bot")
+    
+    st.markdown("### 💡 Example Questions You Can Ask:")
+    st.markdown("""
+    - What is the best fertilizer for maize?
+    - How often should I irrigate tomato plants?
+    - What is the ideal pH for growing wheat?
+    - How do I prevent pests on beans?
+    - What temperature is best for banana farming?
+    """)
+
     user_question = st.text_input("Ask a farming question")
     if st.button("🔍 Search Answer"):
         if user_question:
@@ -222,3 +232,16 @@ with tabs[4]:
             st.info(f"🧠 Answer: {answer}")
         else:
             st.warning("❗ Please type a question.")
+
+    # Show common Q&A
+    st.markdown("### 📌 Frequently Asked Questions (FAQs)")
+
+    conn = sqlite3.connect("farming_data.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT question, response FROM farming_info LIMIT 5")
+    faqs = cursor.fetchall()
+    conn.close()
+
+    for i, (q, a) in enumerate(faqs, start=1):
+        st.markdown(f"**Q{i}: {q}**")
+        st.markdown(f"🟢 *A{i}: {a}*")
