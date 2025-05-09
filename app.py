@@ -173,7 +173,17 @@ with tabs[1]:
 with tabs[2]:
     st.subheader("💧 Get Irrigation Advice")
 
-    crop = st.selectbox("Crop Type", ["Maize", "Wheat", "Tomato", "Potato"])  # Add more if needed
+    crop_categories = {
+    "Cereal Crops": ["Maize", "Wheat"],
+    "Vegetables": ["Tomato", "Potato"],
+    "Fruits": ["Strawberry", "Mango"],
+    "Legumes": ["Beans", "Peas"],
+    "Root Crops": ["Carrot", "Cassava"]
+}
+
+category = st.selectbox("Select Crop Category", list(crop_categories.keys()))
+crop = st.selectbox("Select Specific Crop", crop_categories[category])
+
     soil = st.selectbox("Soil Moisture", list(SOIL_MOISTURE_MAP.keys()) + [10, 30, 50, 70])
     temp = st.selectbox("Temperature", list(TEMPERATURE_MAP.keys()) + [10, 25, 40])
     hum = st.selectbox("Humidity", list(HUMIDITY_MAP.keys()) + [20, 60, 80])
