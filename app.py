@@ -6,6 +6,7 @@ import pickle
 from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
+
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
     model = pickle.load(model_file)
@@ -82,8 +83,7 @@ st.title("🌾 AgriAssistant Dashboard")
 
 tabs = st.tabs(["🏡 Home", "🌱 Crop Recommendation", "💧 Irrigation", "Chat with AgriBot 🤖", "🤖 FAQ Chatbot"])
 
-
-# Home Tab content inside the first tab
+# Home Tab
 with tabs[0]:
     st.markdown("# Welcome to AgriAssistant! 🌱")
     st.markdown("### Empowering Farmers with AI-driven Insights")
@@ -109,7 +109,6 @@ with tabs[0]:
         - **AI Chatbot**: Instant answers to your farming-related questions.
     """)
 
-    st.markdown("### Get Started Now!")
     st.button("Start Exploring")
 
     st.markdown("### Watch our Introduction Video 🎥")
@@ -120,32 +119,15 @@ with tabs[0]:
         height=350
     )
 
-# Crop Recommendation tab
+# Crop Recommendation Tab
 with tabs[1]:
     st.subheader("🌱 Enter Soil & Climate Data")
 
-    # Explanation section to explain ML model
+    st.markdown("## How the Crop Recommendation System Works 🧠")
     st.markdown("""
-    ## How the Crop Recommendation System Works 🧠
-    
-    Our system is powered by a machine learning model trained on a large dataset that includes various environmental factors such as soil composition, temperature, humidity, and rainfall. This model is not hard-coded but uses data-driven predictions to recommend the best crop for your farm's unique conditions. 🌾
-
-    **Key Features of the Model**:
-    - The model has been trained on **thousands of data points** from real-world farms across different climates and regions.
-    - It uses **multiple environmental factors**, including soil nutrients (N, P, K), pH levels, temperature, humidity, and rainfall, to predict the ideal crops for the specific conditions.
-    - The model is continuously refined with new data to improve accuracy and recommendations.
-    
-    This approach ensures that the crop suggestions are relevant, based on actual data and scientific principles, helping you make informed decisions for optimal crop yield.
+    Our system is powered by a machine learning model trained on a large dataset that includes various environmental factors such as soil composition, temperature, humidity, and rainfall.
     """)
 
-    st.markdown("""
-    ## Why Trust the Recommendations? 📊
-    
-    The system was trained using **large-scale agricultural datasets** with data from **global farming regions**. It considers multiple environmental variables and uses advanced machine learning techniques to make predictions that are reliable and backed by real-world data. So you can trust the recommendations based on solid scientific research, not random guesses.
-    
-    """)
-
-    # Input form for soil and climate data
     col1, col2 = st.columns(2)
     with col1:
         N = st.number_input("Nitrogen (N)", 0, 200)
@@ -158,7 +140,6 @@ with tabs[1]:
         hum = st.number_input("Humidity (%)", 0.0, 100.0)
         rainfall = st.number_input("Rainfall (mm)", 0.0, 500.0)
 
-    # Button to trigger crop prediction
     if st.button("🚀 Predict Crop"):
         features = [N, P, K, temp, hum, pH, rainfall]
         try:
@@ -167,33 +148,20 @@ with tabs[1]:
         except Exception as e:
             st.error(f"Error: {e}")
 
-
-
-# Irrigation tab
+# Irrigation Tab
 with tabs[2]:
     st.subheader("💧 Get Irrigation Advice")
 
     crop_categories = {
-    "Cereal Crops": ["Maize", "Wheat"],
-    "Vegetables": ["Tomato", "Potato"],
-    "Fruits": ["Strawberry", "Mango"],
-    "Legumes": ["Beans", "Peas"],
-    "Root Crops": ["Carrot", "Cassava"]
-}
+        "Cereal Crops": ["Maize", "Wheat", "Barley"],
+        "Vegetables": ["Tomato", "Potato", "Cabbage"],
+        "Fruits": ["Strawberry", "Mango", "Banana"],
+        "Legumes": ["Beans", "Peas"],
+        "Root Crops": ["Carrot", "Cassava", "Beetroot"]
+    }
 
-category = st.selectbox("Select Crop Category", list(crop_categories.keys()))
-# Grouped crop categories
-crop_categories = {
-    "Cereal Crops": ["Maize", "Wheat", "Barley"],
-    "Vegetables": ["Tomato", "Potato", "Cabbage"],
-    "Fruits": ["Strawberry", "Mango", "Banana"],
-    "Legumes": ["Beans", "Peas"],
-    "Root Crops": ["Carrot", "Cassava", "Beetroot"]
-}
-
-# Let user first select category, then specific crop
-category = st.selectbox("🌾 Select Crop Category", list(crop_categories.keys()))
-crop = st.selectbox("🌱 Select Specific Crop", crop_categories[category])
+    category = st.selectbox("🌾 Select Crop Category", list(crop_categories.keys()))
+    crop = st.selectbox("🌱 Select Specific Crop", crop_categories[category])
 
     soil = st.selectbox("Soil Moisture", list(SOIL_MOISTURE_MAP.keys()) + [10, 30, 50, 70])
     temp = st.selectbox("Temperature", list(TEMPERATURE_MAP.keys()) + [10, 25, 40])
@@ -210,11 +178,10 @@ crop = st.selectbox("🌱 Select Specific Crop", crop_categories[category])
             recommendation = get_irrigation_recommendation(soil_val, temp_val, hum_val, crop)
             st.success(recommendation)
 
+# Chat with AgriBot
 with tabs[3]:
     st.markdown("## 💬 Chat with AgriBot")
-
-    col1, col2 = st.columns([1.2, 1])  # Adjust proportions: chatbot wider
-
+    col1, col2 = st.columns([1.2, 1])
     with col1:
         st.markdown("### 🤖 Your Farming Assistant")
         components.html(
@@ -236,49 +203,22 @@ with tabs[3]:
             """,
             height=600
         )
-
     with col2:
         st.markdown("### 📋 How to Use AgriBot")
         st.write("""
         You can ask questions like:
-        - *“What’s the best crop to grow this month in Tigray?”*
-        - *“How do I deal with tomato pests naturally?”*
-        - *“What irrigation system is ideal for small farms?”*
-
-        AgriBot will give instant, AI-powered answers to help you farm smarter 🌿
+        - “What’s the best crop to grow this month in Tigray?”
+        - “How do I deal with tomato pests naturally?”
+        - “What irrigation system is ideal for small farms?”
         """)
-        st.success("💡 Click the chat window below and 👈 start chatting with AgriBot on the left!")
 
-
-
-
-
-# FAQ tab
+# FAQ Tab
 with tabs[4]:
-    st.subheader("📋 Ask a Farming Question")
-
-    question = st.text_input("Ask your question:")
-    if st.button("🔍 Search FAQ"):
-        if question.strip() != "":
-            reply = get_farming_info(question)
-            st.info(reply)
+    st.subheader("🤖 Ask the FAQ Bot")
+    user_question = st.text_input("Ask a farming question")
+    if st.button("🔍 Search Answer"):
+        if user_question:
+            answer = get_farming_info(user_question)
+            st.info(f"🧠 Answer: {answer}")
         else:
-            st.warning("Please enter a question.")
-
-st.markdown("""
-<style>
-.footer {
-    position: fixed;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    color: gray;
-    font-size: 14px;
-    padding: 10px;
-}
-</style>
-<div class="footer">
-    © 2024 Yanet Niguse Tesfay. All rights reserved.
-</div>
-""", unsafe_allow_html=True)
+            st.warning("❗ Please type a question.")
