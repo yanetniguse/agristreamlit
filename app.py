@@ -182,7 +182,18 @@ with tabs[2]:
 }
 
 category = st.selectbox("Select Crop Category", list(crop_categories.keys()))
-crop = st.selectbox("Select Specific Crop", crop_categories[category])
+# Grouped crop categories
+crop_categories = {
+    "Cereal Crops": ["Maize", "Wheat", "Barley"],
+    "Vegetables": ["Tomato", "Potato", "Cabbage"],
+    "Fruits": ["Strawberry", "Mango", "Banana"],
+    "Legumes": ["Beans", "Peas"],
+    "Root Crops": ["Carrot", "Cassava", "Beetroot"]
+}
+
+# Let user first select category, then specific crop
+category = st.selectbox("🌾 Select Crop Category", list(crop_categories.keys()))
+crop = st.selectbox("🌱 Select Specific Crop", crop_categories[category])
 
     soil = st.selectbox("Soil Moisture", list(SOIL_MOISTURE_MAP.keys()) + [10, 30, 50, 70])
     temp = st.selectbox("Temperature", list(TEMPERATURE_MAP.keys()) + [10, 25, 40])
