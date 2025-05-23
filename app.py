@@ -7,6 +7,10 @@ from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
 
+# ✅ Must be the FIRST Streamlit command
+st.set_page_config(page_title="AgriAssistant", layout="wide")
+
+# Embed Google Translate (shown before any Streamlit output)
 components.html(
     """
     <style>
@@ -36,6 +40,8 @@ components.html(
     height=0,
 )
 
+# Now it's safe to use any Streamlit command
+st.title("NourishKidsAgri 🌱 - AI-powered Agricultural Assistant")
 
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
