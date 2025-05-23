@@ -7,6 +7,44 @@ from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
 
+def inject_google_translate():
+    components.html(
+        """
+        <style>
+            .translate-widget {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                z-index: 1000;
+            }
+        </style>
+        <div id="google_translate_element" class="translate-widget"></div>
+
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,sw,am,ti',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                }, 'google_translate_element');
+            }
+
+            // Ensure it's loaded only once
+            if (!window.googleTranslateAdded) {
+                window.googleTranslateAdded = true;
+                var script = document.createElement('script');
+                script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                script.type = 'text/javascript';
+                document.head.appendChild(script);
+            }
+        </script>
+        """,
+        height=0
+    )
+
+# Call this once in your script after set_page_config
+inject_google_translate()
+
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
     model = pickle.load(model_file)
