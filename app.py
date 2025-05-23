@@ -7,42 +7,6 @@ from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
 
-# ✅ Must be the FIRST Streamlit command
-st.set_page_config(page_title="AgriAssistant", layout="wide")
-
-# Embed Google Translate (shown before any Streamlit output)
-components.html(
-    """
-    <style>
-    .translate-widget {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 1000;
-    }
-    </style>
-
-    <div id="google_translate_element" class="translate-widget"></div>
-
-    <script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,sw,am,ti',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'google_translate_element');
-    }
-    </script>
-    <script type="text/javascript"
-    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-    </script>
-    """,
-    height=0,
-)
-
-# Now it's safe to use any Streamlit command
-st.title("NourishKidsAgri 🌱 - AI-powered Agricultural Assistant")
-
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
     model = pickle.load(model_file)
