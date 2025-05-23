@@ -7,16 +7,19 @@ from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
 
-# ✅ Must be FIRST Streamlit command
-st.set_page_config(page_title="AgriAssistant", layout="wide")
-
-# Now it's safe to do anything else
-st.title("NourishKidsAgri 🌱 - AI-powered Agricultural Assistant")
-
-# Embed Google Translate
 components.html(
     """
-    <div id="google_translate_element"></div>
+    <style>
+    .translate-widget {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+    }
+    </style>
+
+    <div id="google_translate_element" class="translate-widget"></div>
+
     <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
@@ -30,8 +33,9 @@ components.html(
     src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script>
     """,
-    height=80,
+    height=0,
 )
+
 
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
