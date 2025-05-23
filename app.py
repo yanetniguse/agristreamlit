@@ -7,23 +7,25 @@ from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
 
-
-# Google Translate Widget
-google_translate_widget = """
-<div id="google_translate_element"></div>
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'en',
-    includedLanguages: 'en,sw,am,ti',
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-  }, 'google_translate_element');
-}
-</script>
-<script type="text/javascript" 
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-"""
+# Embed Google Translate
+components.html(
+    """
+    <div id="google_translate_element"></div>
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,sw,am,ti',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" 
+    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
+    """,
+    height=80,
+)
 
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
