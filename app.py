@@ -7,6 +7,8 @@ from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
 
+st.set_page_config(page_title="AgriAssistant", layout="wide")
+
 def inject_google_translate():
     components.html(
         """
@@ -29,7 +31,6 @@ def inject_google_translate():
                 }, 'google_translate_element');
             }
 
-            // Ensure it's loaded only once
             if (!window.googleTranslateAdded) {
                 window.googleTranslateAdded = true;
                 var script = document.createElement('script');
@@ -39,11 +40,14 @@ def inject_google_translate():
             }
         </script>
         """,
-        height=0
+        height=50
     )
 
-# Call this once in your script after set_page_config
+# Call the widget injection here, near the start of your Streamlit script
 inject_google_translate()
+
+# Now add your Streamlit UI and logic here:
+st.title("Welcome to AgriAssistant")
 
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
