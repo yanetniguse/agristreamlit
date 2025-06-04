@@ -189,7 +189,7 @@ with tabs[3]:
             <div id="chatbot-container" style="height: 600px; width: 100%;"></div>
             <script>
             window.chatbaseConfig = {
-                chatbotId: "DOD8oYHsTQh1lEvpqMZdd",
+                chatbotId: "2cWA9yXY2No0Nkcu5iB6P",
                 selector: "#chatbot-container",
                 welcomeMessage: "👋 Hello! How can I help with your farming today?",
             };
