@@ -187,19 +187,16 @@ with tabs[3]:
         components.html(
             """
             <div id="chatbot-container" style="height: 600px; width: 100%;"></div>
+
             <script>
-            window.chatbaseConfig = {
+              window.chatbaseConfig = {
                 chatbotId: "2cWA9yXY2No0Nkcu5iB6P",
                 selector: "#chatbot-container",
-                welcomeMessage: "👋 Hello! How can I help with your farming today?",
-            };
-            (function() {
-                var script = document.createElement("script");
-                script.src = "https://www.chatbase.co/embed.min.js";
-                script.defer = true;
-                document.body.appendChild(script);
-            })();
+                welcomeMessage: "👋 Hello! How can I help with your farming today?"
+              };
             </script>
+
+            <script src="https://www.chatbase.co/embed.min.js" id="chatbase-script" defer></script>
             """,
             height=600
         )
@@ -211,6 +208,7 @@ with tabs[3]:
         - “How do I deal with tomato pests naturally?”
         - “What irrigation system is ideal for small farms?”
         """)
+
 
 # FAQ Tab
 with tabs[4]:
