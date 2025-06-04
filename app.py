@@ -189,12 +189,8 @@ with tabs[3]:
             <div id="chatbot-container" style="height: 600px; width: 100%;"></div>
 
             <script>
-              window.chatbaseConfig = {
-                chatbotId: "2cWA9yXY2No0Nkcu5iB6P",
-                selector: "#chatbot-container",
-                welcomeMessage: "👋 Hello! How can I help with your farming today?"
-              };
-            </script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="2cWA9yXY2No0Nkcu5iB6P";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
 
             <script src="https://www.chatbase.co/embed.min.js" id="chatbase-script" defer></script>
             """,
