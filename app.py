@@ -194,7 +194,7 @@ with tabs[3]:
 
             <script src="https://www.chatbase.co/embed.min.js" id="chatbase-script" defer></script>
             """,
-            height=600
+            height=540
         )
     with col2:
         st.markdown("### 📋 How to Use AgriBot")
