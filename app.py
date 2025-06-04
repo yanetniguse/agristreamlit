@@ -204,6 +204,7 @@ with tabs[3]:
         - “How do I deal with tomato pests naturally?”
         - “What irrigation system is ideal for small farms?”
         """)
+        st.success("💡 Click the chat window below and 👈 start chatting with AgriBot on the left!")
 
 
 # FAQ Tab
