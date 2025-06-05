@@ -1,7 +1,7 @@
 
-# NourishKidsAgri: AI-powered Agricultural Assistant 🌱
+# FarmBuddy: AI-powered Agricultural Assistant 🌱
 
-NourishKidsAgri is an AI-driven platform designed to assist farmers in making informed decisions for efficient and sustainable farming. By leveraging machine learning and advanced algorithms, the platform offers crop recommendations, irrigation management, and an AI-powered chatbot for instant farming insights.
+FarmBuddy is an AI-driven platform designed to assist farmers in making informed decisions for efficient and sustainable farming. By leveraging machine learning and advanced algorithms, the platform offers crop recommendations, irrigation management, and an AI-powered chatbot for instant farming insights.
 
 ### Key Features:
 - **Crop Recommendations**: Personalized crop suggestions based on local weather, soil, and environmental data.
