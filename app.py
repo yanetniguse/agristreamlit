@@ -259,20 +259,22 @@ model, le = load_model()
 # Last tab - Yield Prediction
 with tabs[5]:
     st.title("🌾 Climate Impact Prediction on Crop Yield")
-    st.markdown("""
+ st.markdown("""
 ---
 
 ### 🌍 Why This Matters
 
-Adding climate-aware crop yield prediction makes FarmBuddy more than just a helpful tool—it becomes a **scientifically grounded decision-support platform**.
+FarmBuddy is designed to help agriculture adapt, grow, and succeed — even in the face of climate uncertainty.
+
+By integrating climate-aware crop yield prediction, the platform evolves into a **scientific, decision-support tool**, supporting farmers, researchers, and agri-tech innovators who need to understand and respond to environmental change.
 
 - It helps farmers **understand how climate stress affects their yield**.
 - It supports **early planning** and **policy development**.
 - It shows that FarmBuddy is **built on real research**, not just AI tricks.
 
 > 🎯 **This bridges the gap between advanced modeling and local impact.**
-
 """)
+
 
     st.markdown("Use the form below to predict crop yield based on climate and agricultural inputs.")
 
