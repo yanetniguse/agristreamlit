@@ -6,6 +6,7 @@ import pickle
 from irrigation import get_irrigation_recommendation
 from PIL import Image
 import streamlit.components.v1 as components
+import joblib
 
 # Load trained crop model
 with open("xgb_crop_model.pkl", "rb") as model_file:
