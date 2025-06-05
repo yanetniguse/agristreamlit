@@ -81,7 +81,7 @@ def predict_crop(input_features):
 st.set_page_config(page_title="AgriAssistant", layout="wide")
 st.title("🌾 AgriAssistant Dashboard")
 
-tabs = st.tabs(["🏡 Home", "🌱 Crop Recommendation", "💧 Irrigation", "Chat with AgriBot 🤖", "🤖 FAQ Chatbot"])
+tabs = st.tabs(["🏡 Home", "🌱 Crop Recommendation", "💧 Irrigation", "Chat with AgriBot 🤖", "🤖 FAQ Chatbot", "🌾 Yield Prediction"])
 
 # Home Tab
 with tabs[0]:
@@ -240,3 +240,119 @@ with tabs[4]:
     for i, (q, a) in enumerate(faqs, start=1):
         st.markdown(f"**Q{i}: {q}**")
         st.markdown(f"🟢 *A{i}: {a}*")
+
+
+# start tab 5 which is about climate impact on agriculture, a research based ML project
+# Load model and encoder once
+@st.cache_resource
+def load_model():
+    model = joblib.load("random_forest_model.joblib")
+    le = joblib.load("label_encoder.joblib")
+    return model, le
+
+model, le = load_model()
+
+# =======================
+# Tab 5: Prediction Page
+# =======================
+# Last tab - Yield Prediction
+with tabs[5]:
+    st.title("🌾 Climate Impact Prediction on Crop Yield")
+    st.markdown("""
+---
+
+### 🌍 Why This Matters
+
+Adding climate-aware crop yield prediction makes FarmBuddy more than just a helpful tool—it becomes a **scientifically grounded decision-support platform**.
+
+- It helps farmers **understand how climate stress affects their yield**.
+- It supports **early planning** and **policy development**.
+- It shows that FarmBuddy is **built on real research**, not just AI tricks.
+
+> 🎯 **This bridges the gap between advanced modeling and local impact.**
+
+""")
+
+    st.markdown("Use the form below to predict crop yield based on climate and agricultural inputs.")
+
+    with st.form("yield_prediction_form"):
+        st.markdown("### 🌍 Climate & Region")
+        year = st.number_input("Year", min_value=2000, max_value=2100, value=2024)
+        region = st.selectbox("Region", le.classes_)
+
+        st.markdown("### 🌡️ Climate Features")
+        temp = st.slider("Average Temperature (°C)", 0.0, 50.0, 25.0)
+        rain = st.slider("Total Precipitation (mm)", 0.0, 2000.0, 500.0)
+        events = st.number_input("Extreme Weather Events (annual)", min_value=0, value=2)
+        co2 = st.slider("CO₂ Emissions (metric tons)", 0.0, 100.0, 30.0)
+
+        st.markdown("### 🌾 Farming Inputs")
+        irrigation = st.slider("Irrigation Access (%)", 0, 100, 60)
+        fertilizer = st.slider("Fertilizer Use (kg/ha)", 0.0, 300.0, 100.0)
+        pesticide = st.slider("Pesticide Use (kg/ha)", 0.0, 50.0, 10.0)  # Not yet used in model
+        soil_health = st.slider("Soil Health Index (0–100)", 0.0, 100.0, 70.0)
+
+        submitted = st.form_submit_button("📊 Predict Crop Yield")
+
+        if submitted:
+            region_encoded = le.transform([region])[0]
+            temp_x_rain = temp * rain
+            weather_impact = events * temp
+            temp_sq = temp ** 2
+            rain_sq = rain ** 2
+
+            # Build feature array in the order model expects
+            X_input = np.array([[
+                temp,
+                rain,
+                events,
+                co2,
+                irrigation,
+                fertilizer,
+                soil_health,
+                region_encoded,
+                temp_x_rain,
+                weather_impact,
+                temp_sq,
+                rain_sq
+            ]])
+
+            # Predict
+            prediction = model.predict(X_input)[0]
+
+            st.success(f"✅ **Predicted Crop Yield: {prediction:.2f} tons/hectare**")
+
+            # 👇 Research-based and human-readable interpretation
+            st.markdown(f"""
+            ### 📈 What does this mean?
+
+            Based on the climate and farming inputs you provided, the expected crop yield is approximately  
+            **{prediction:.2f} metric tons per hectare**.
+
+            **This value reflects how climate factors like temperature, rainfall, and extreme events — along with farming practices such as irrigation, fertilizer use, and soil health — impact the productivity of farmland.**
+
+            🧠 **Key Insight**:  
+            - Crop yields around **2.0–4.0 tons/ha** are average for staple crops like wheat and maize.
+            - Values below **2.0 tons/ha** may indicate climate stress, poor soil health, or limited irrigation.
+            - Higher values may suggest optimal growing conditions or improved agricultural inputs.
+
+            This prediction is generated using a machine learning model trained on simulated data that reflects real-world agricultural patterns, helping us explore **how climate change could affect food production**.
+            """)
+
+            # 👇 Optional: detailed input summary
+            with st.expander("📋 View Input Summary"):
+                st.markdown("""
+                Here are the climate and farming inputs used to generate the prediction:
+                """)
+                st.json({
+                    "Region": region,
+                    "Year": year,
+                    "Temperature (°C)": temp,
+                    "Precipitation (mm)": rain,
+                    "CO₂ Emissions (MT)": co2,
+                    "Extreme Events": events,
+                    "Irrigation (%)": irrigation,
+                    "Fertilizer (kg/ha)": fertilizer,
+                    "Pesticide (kg/ha)": pesticide,
+                    "Soil Health Index": soil_health
+                })
