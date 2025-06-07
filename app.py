@@ -258,8 +258,8 @@ model, le = load_model()
 # =======================
 # Last tab - Yield Prediction
 with tabs[5]:
-st.title("🌾 Climate Impact Prediction on Crop Yield")
-st.markdown("""
+						st.title("🌾 Climate Impact Prediction on Crop Yield")
+						st.markdown("""
 ---
 ### 🌍 Why This Matters
 
@@ -274,88 +274,87 @@ By integrating climate-aware crop yield prediction, the platform evolves into a 
 > 🎯 **This bridges the gap between advanced modeling and local impact.**
 """)
 
+						st.markdown("Use the form below to predict crop yield based on climate and agricultural inputs.")
 
+						with st.form("yield_prediction_form"):
+							st.markdown("### 🌍 Climate & Region")
+							year = st.number_input("Year", min_value=2000, max_value=2100, value=2024)
+							region = st.selectbox("Region", le.classes_)
 
-    st.markdown("Use the form below to predict crop yield based on climate and agricultural inputs.")
+							st.markdown("### 🌡️ Climate Features")
+							temp = st.slider("Average Temperature (°C)", 0.0, 50.0, 25.0)
+							rain = st.slider("Total Precipitation (mm)", 0.0, 2000.0, 500.0)
+							events = st.number_input("Extreme Weather Events (annual)", min_value=0, value=2)
+							co2 = st.slider("CO₂ Emissions (metric tons)", 0.0, 100.0, 30.0)
 
-    with st.form("yield_prediction_form"):
-        st.markdown("### 🌍 Climate & Region")
-        year = st.number_input("Year", min_value=2000, max_value=2100, value=2024)
-        region = st.selectbox("Region", le.classes_)
+							st.markdown("### 🌾 Farming Inputs")
+							irrigation = st.slider("Irrigation Access (%)", 0, 100, 60)
+							fertilizer = st.slider("Fertilizer Use (kg/ha)", 0.0, 300.0, 100.0)
+							pesticide = st.slider("Pesticide Use (kg/ha)", 0.0, 50.0, 10.0)  # Not yet used in model
+							soil_health = st.slider("Soil Health Index (0–100)", 0.0, 100.0, 70.0)
 
-        st.markdown("### 🌡️ Climate Features")
-        temp = st.slider("Average Temperature (°C)", 0.0, 50.0, 25.0)
-        rain = st.slider("Total Precipitation (mm)", 0.0, 2000.0, 500.0)
-        events = st.number_input("Extreme Weather Events (annual)", min_value=0, value=2)
-        co2 = st.slider("CO₂ Emissions (metric tons)", 0.0, 100.0, 30.0)
+							submitted = st.form_submit_button("📊 Predict Crop Yield")
 
-        st.markdown("### 🌾 Farming Inputs")
-        irrigation = st.slider("Irrigation Access (%)", 0, 100, 60)
-        fertilizer = st.slider("Fertilizer Use (kg/ha)", 0.0, 300.0, 100.0)
-        pesticide = st.slider("Pesticide Use (kg/ha)", 0.0, 50.0, 10.0)  # Not yet used in model
-        soil_health = st.slider("Soil Health Index (0–100)", 0.0, 100.0, 70.0)
+							if submitted:
+								region_encoded = le.transform([region])[0]
+								temp_x_rain = temp * rain
+								weather_impact = events * temp
+								temp_sq = temp ** 2
+								rain_sq = rain ** 2
 
-        submitted = st.form_submit_button("📊 Predict Crop Yield")
+								# Build feature array in the order model expects
+								X_input = np.array([[
+									temp,
+									rain,
+									events,
+									co2,
+									irrigation,
+									fertilizer,
+									soil_health,
+									region_encoded,
+									temp_x_rain,
+									weather_impact,
+									temp_sq,
+									rain_sq
+								]])
 
-        if submitted:
-            region_encoded = le.transform([region])[0]
-            temp_x_rain = temp * rain
-            weather_impact = events * temp
-            temp_sq = temp ** 2
-            rain_sq = rain ** 2
+								# Predict
+								prediction = model.predict(X_input)[0]
 
-            # Build feature array in the order model expects
-            X_input = np.array([[
-                temp,
-                rain,
-                events,
-                co2,
-                irrigation,
-                fertilizer,
-                soil_health,
-                region_encoded,
-                temp_x_rain,
-                weather_impact,
-                temp_sq,
-                rain_sq
-            ]])
+								st.success(f"✅ **Predicted Crop Yield: {prediction:.2f} tons/hectare**")
 
-            # Predict
-            prediction = model.predict(X_input)[0]
+								# 👇 Research-based and human-readable interpretation
+								st.markdown(f"""
+### 📈 What does this mean?
 
-            st.success(f"✅ **Predicted Crop Yield: {prediction:.2f} tons/hectare**")
+Based on the climate and farming inputs you provided, the expected crop yield is approximately  
+**{prediction:.2f} metric tons per hectare**.
 
-            # 👇 Research-based and human-readable interpretation
-            st.markdown(f"""
-            ### 📈 What does this mean?
+**This value reflects how climate factors like temperature, rainfall, and extreme events — along with farming practices such as irrigation, fertilizer use, and soil health — impact the productivity of farmland.**
 
-            Based on the climate and farming inputs you provided, the expected crop yield is approximately  
-            **{prediction:.2f} metric tons per hectare**.
+🧠 **Key Insight**:  
+- Crop yields around **2.0–4.0 tons/ha** are average for staple crops like wheat and maize.
+- Values below **2.0 tons/ha** may indicate climate stress, poor soil health, or limited irrigation.
+- Higher values may suggest optimal growing conditions or improved agricultural inputs.
 
-            **This value reflects how climate factors like temperature, rainfall, and extreme events — along with farming practices such as irrigation, fertilizer use, and soil health — impact the productivity of farmland.**
+This prediction is generated using a machine learning model trained on simulated data that reflects real-world agricultural patterns, helping us explore **how climate change could affect food production**.
+""")
 
-            🧠 **Key Insight**:  
-            - Crop yields around **2.0–4.0 tons/ha** are average for staple crops like wheat and maize.
-            - Values below **2.0 tons/ha** may indicate climate stress, poor soil health, or limited irrigation.
-            - Higher values may suggest optimal growing conditions or improved agricultural inputs.
+								# 👇 Optional: detailed input summary
+								with st.expander("📋 View Input Summary"):
+									st.markdown("""
+Here are the climate and farming inputs used to generate the prediction:
+""")
+									st.json({
+										"Region": region,
+										"Year": year,
+										"Temperature (°C)": temp,
+										"Precipitation (mm)": rain,
+										"CO₂ Emissions (MT)": co2,
+										"Extreme Events": events,
+										"Irrigation (%)": irrigation,
+										"Fertilizer (kg/ha)": fertilizer,
+										"Pesticide (kg/ha)": pesticide,
+										"Soil Health Index": soil_health
+									})
 
-            This prediction is generated using a machine learning model trained on simulated data that reflects real-world agricultural patterns, helping us explore **how climate change could affect food production**.
-            """)
-
-            # 👇 Optional: detailed input summary
-            with st.expander("📋 View Input Summary"):
-                st.markdown("""
-                Here are the climate and farming inputs used to generate the prediction:
-                """)
-                st.json({
-                    "Region": region,
-                    "Year": year,
-                    "Temperature (°C)": temp,
-                    "Precipitation (mm)": rain,
-                    "CO₂ Emissions (MT)": co2,
-                    "Extreme Events": events,
-                    "Irrigation (%)": irrigation,
-                    "Fertilizer (kg/ha)": fertilizer,
-                    "Pesticide (kg/ha)": pesticide,
-                    "Soil Health Index": soil_health
-                })
