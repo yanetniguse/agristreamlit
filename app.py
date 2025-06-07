@@ -258,8 +258,8 @@ model, le = load_model()
 # =======================
 # Last tab - Yield Prediction
 with tabs[5]:
-    st.title("🌾 Climate Impact Prediction on Crop Yield")
- st.markdown("""
+st.title("🌾 Climate Impact Prediction on Crop Yield")
+st.markdown("""
 ---
 
 ### 🌍 Why This Matters
