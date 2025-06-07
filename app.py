@@ -261,7 +261,6 @@ with tabs[5]:
 st.title("🌾 Climate Impact Prediction on Crop Yield")
 st.markdown("""
 ---
-
 ### 🌍 Why This Matters
 
 FarmBuddy is designed to help agriculture adapt, grow, and succeed — even in the face of climate uncertainty.
@@ -274,6 +273,7 @@ By integrating climate-aware crop yield prediction, the platform evolves into a 
 
 > 🎯 **This bridges the gap between advanced modeling and local impact.**
 """)
+
 
 
     st.markdown("Use the form below to predict crop yield based on climate and agricultural inputs.")
