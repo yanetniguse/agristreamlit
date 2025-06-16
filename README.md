@@ -7,8 +7,30 @@ FarmBuddy is an AI-driven platform designed to assist farmers in making informed
 - **Crop Recommendations**: Personalized crop suggestions based on local weather, soil, and environmental data.
 - **Irrigation Management**: Tailored irrigation advice to ensure optimal water usage and crop health.
 - **AI Chatbot**: Get instant answers to your farming-related questions and optimize your farm's potential.
-
 ---
+
+## 🌾 Climate-Aware Yield Prediction
+
+As an extension to FarmBuddy’s capabilities, this feature models the impact of climate variables on crop yield using statistical and machine learning techniques.
+
+Developed as part of a senior-level research project, this module incorporates:
+- Ordinary Least Squares (OLS) regression for statistical validation
+- Random Forest and XGBoost models for accurate, nonlinear prediction
+- Feature engineering with temperature, rainfall, soil health, and climate interactions
+
+📊 Explore the Colab notebook used to build and validate this model:
+[👉 Open Climate-Yield Modeling Notebook](https://colab.research.google.com/drive/10P4_yxDBa0nWi5BYsEDi7daJ4123UncK?usp=sharing)
+
+This notebook demonstrates:
+- Data cleaning and outlier handling
+- Exploratory Data Analysis (EDA)
+- Feature engineering for climate interactions (e.g., Temp × Rain)
+- Model comparison and evaluation (RMSE, MAE, R²)
+- Residual diagnostics and hypothesis testing
+
+🚀 This feature has been published and accepted for presentation at the **International Conference on Convergent and Smart Systems (ICCSS 2025)**.
+
+
 
 ## Live Demo 🌟
 
